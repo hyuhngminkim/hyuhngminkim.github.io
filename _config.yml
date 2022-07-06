@@ -82,7 +82,7 @@ analytics:
 author:
   name             : "Hyuhng Min Kim"
   avatar           : "profile_crop.jpg"
-  bio              : "I am a masters student studying computer science at KAIST."
+  bio              : # "I am a masters student studying computer science at KAIST."
   location         : "Daejeon, South Korea"
   employer         :
   pubmed           : # "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
