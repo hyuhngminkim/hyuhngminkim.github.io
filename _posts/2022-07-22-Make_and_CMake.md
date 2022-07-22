@@ -121,7 +121,7 @@ $ apt-get install libssl-dev
 ```bash
 $ ./bootstrap --prefix=/usr/local
 $ make
-
+$ sudo make install
 ```
 
 ### Trying CMake
@@ -141,3 +141,77 @@ project(test)
 # 실행 파일 이름을 명시합니다. 
 add_executable(${PROJECT_NAME} main.c)
 ```
+
+CMake를 실행하기 위해서는 다음 명령어를 사용합니다. 
+
+```bash
+$ cmake -S <path-to-source> -B <path-to-build>
+```
+
+여기서 ``<path-to-source>``란 ``CMakeLists.txt``가 위치한 디렉토리, ``<path-to-build>``란 빌드된 파일이 위치할 디렉토리를 말합니다. 
+저와 같은 경우는 ``out/build/``라는 디렉토리를 만들어 빌드된 파일을 담도록 했습니다. 
+
+```bash
+$ mkdir -p ./out/build/
+$ cmake -S . -B out/build
+```
+
+이 명령어를 실행하면 ``out/build/`` 디렉토리에 다음과 같은 파일들이 생성됩니다. 
+
+```bash
+$ ls
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake
+```
+
+앞서 살펴본 ``Makefile``이 생성된 것을 알 수 있습니다!
+위에서와 같이 명령어를 실행시켜 줍시다. 
+
+```bash
+$ make
+```
+
+우리가 앞서 ``main.c`` 코드를 실행 파일로 빌드시킬 파일 이름을 ``${PROJECT_NAME}``으로 명시했기 때문에, ``make``가 끝나면 ``out/build`` 디렉토리 내에는 다음 파일들이 위치하게 됩니다. 
+
+```bash
+$ ls
+CMakeCache.txt  CMakeFiles  Makefile  cmake_install.cmake  test
+```
+
+프로젝트 이름이 ``test``이기 때문에 ``test``라는 이름의 실행 파일이 생성된 것을 확인할 수 있습니다. 
+이 파일을 실행시키면 다음과 같은 결과가 나옵니다. 
+
+```bash
+$ ./test
+Hello, world!
+```
+
+## In LevelDB
+
+LevelDB는 ``CMakeLists.txt`` 파일을 제공합니다. 
+LevelDB의 ``CMakeLists.txt`` 역시 우리가 살펴본 내용이 들어있는데요, 그 내용을 간단하게 살펴보겠습니다. 
+
+```makefile
+# Copyright 2017 The LevelDB Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file. See the AUTHORS file for names of contributors.
+
+cmake_minimum_required(VERSION 3.9)
+# Keep the version below in sync with the one in db.h
+project(leveldb VERSION 1.23.0 LANGUAGES C CXX)
+```
+
+위에서 본 명령어들을 여기서도 볼 수 있습니다. 
+``cmake_minimum_required``를 통해 요구하는 CMake의 최소 버전이 ``3.9``라는 것을 알 수 있습니다. 
+``project`` 명령어는 조금 다른데, 공식 문서를 보면 다음과 같은 설명을 볼 수 있습니다. 
+
+```makefile
+project(<PROJECT-NAME>
+        [VERSION <major>[.<minor>[.<patch>[.<tweak>]]]]
+        [DESCRIPTION <project-description-string>]
+        [HOMEPAGE_URL <url-string>]
+        [LANGUAGES <language-name>...])
+```
+
+꽤나 직관적입니다. 
+제가 받은 LevelDB는 ``leveldb``라는 프로젝트명을 가지고 있고, ``1.23.0`` 버전이며, 그리고 빌드에 C와 C++이 요구된다는 것을 알 수 있습니다. 
+자세한 내용은 공식 [문서](https://cmake.org/cmake/help/latest/command/project.html)에서 확인하실 수 있습니다. 
