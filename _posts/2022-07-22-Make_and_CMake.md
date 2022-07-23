@@ -4,6 +4,7 @@ date: 2022-07-22
 permalink: /posts/2022/07/cmake-basics/
 tags:
   - cmake
+  - leveldb
 ---
 
 # Introduction
