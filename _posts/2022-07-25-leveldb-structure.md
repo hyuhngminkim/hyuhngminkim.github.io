@@ -52,3 +52,35 @@ LevelDB의 쓰기 작업은 디스크에 직접 기록되는 것이 아니라 �
 ## sstable
 
 디스크에 저장되는 LevelDB 데이터는 일부 메타데이터 파일을 제외하고 sstable을 통해 저장됩니다. 
+만약 이런 sstable이 무한정으로 생산되기만 한다면, 탐색을 할 때 선형 탐색을 해야 해서 굉장히 비효율적일 것입니다. 
+따라서 LevelDB는 compaction이라는 압축 작업을 통해 "정기적으로" sstable 파일을 통합합니다. 
+
+모둔 sstable 파일 자체의 내용은 변경할 수 없습니다. 
+이것은 LevelDB의 디자인을 단순화하는 등 많은 이점을 가져옵니다. 
+
+## manifest
+
+LevelDB에는 **버전**이라는 개념이 있는데, 버전은 주로 각 레이어에 있는 모든 파일의 메타데이터를 기록하며, 메타데이터에는 (1) 파일 크기 (2) 최대 키 값 (3) 최소 키 값이 포함됩니다. 
+버전 정보를 통해 각 파일의 최대/최소 키 값을 사용하여 데이터 검색 속도를 높이거나, compaction 제어를 위한 통계를 유지, 관리합니다. 
+
+각 compaction이 완료되면 (즉, 각 sstable 파일이 추가되거나 제거되면) LevelDB는 새 버전을 만들고, 그 생성 규칙은 다음과 같습니다. 
+
+$$ \text{versionNew} = \text{VersionOld} + \text{versionEdit} $$
+
+versionEdit은 이전 버전을 기반으로 한 변경 사항을 나타냅니다. 
+
+manifest 파일은 이러한 versionEdit 정보를 기록하는 데 사용됩니다. 
+versionEdit 데이터는 레코드로 인코딩되어 manifest 파일에 기록됩니다. 
+다음 그림은 3개의 versionEdit 레코드를 포함하는 파일의 개략도입니다. 
+각 레코드에는 (1) 어떤 sst 파일이 추가되는지 (2) 어떤 sst 파일이 삭제되는지 (3) 현재 compaction의 첨자 (4) 로그 파일 번호 (5) 작업 seqNumber 및 기타 정보가 기록됩니다. 
+이 정보를 통해 LevelDB는 시작할 때 빈 버전을 기반으로 이러한 레코드를 지속적으로 적용하고, 마지막 실행이 끝날 때 최종적으로 버전 정보를 얻을 수 있습니다. 
+
+![](/images/leveldb/manifest.jpeg)
+출처: *[https://leveldb-handbook.readthedocs.io/zh/latest/basic.html](https://leveldb-handbook.readthedocs.io/zh/latest/basic.html)*
+
+## current
+
+이 파일의 내용에는 현재 manifest 파일 이름을 기록하는 정보가 하나만 있습니다. 
+LevelDB가 시작될 때마다 새로운 manifest 파일이 생성되기 때문입니다. 
+따라서 데이터 디렉터리에 여러 manifest 파일이 있을 수 있습니다. 
+current는 어떤 manifest 파일이 우리가 관심을 가지고 있는 파일인지 가리키는 데 사용됩니다. 
