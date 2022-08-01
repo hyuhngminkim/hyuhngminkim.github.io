@@ -18,8 +18,8 @@ LevelDB의 전체적인 구조에 대해 작성하는 포스팅입니다.
 
 # Table of Contents
 
-- 전체 구조
-- 읽기 및 쓰기 작업
+- [전체 구조](https://hyuhngminkim.github.io/posts/2022/07/leveldb-structure/)
+- [읽기 및 쓰기 작업](https://hyuhngminkim.github.io/posts/2022/07/operations/)
 - 로그(log)
 - 메모리 데이터베이스
 - sstable
