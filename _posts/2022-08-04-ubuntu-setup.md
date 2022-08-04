@@ -238,3 +238,144 @@ fatal: No credential store has been selected.
 ```bash
 $ git config --global cedential.credentialStore secretservice
 ```
+
+# Terminal Customization
+
+윈도우에서 WSL과 맥북을 쓰면서 가장 먼저 설정한 것 중 하나가 터미널을 꾸미는 것이었습니다. 
+우분투에서도 마찬가지였는데, 차이점은 윈도우 터미널 혹은 iTerm2를 설치해야 하는 각 운영체제와는 달리 우분투에서는 기본 터미널에 모든 것을 할 수 있다는 것이었습니다. 
+
+## Powerlevel10k 설치
+
+[Powerlevel10k](https://github.com/romkatv/powerlevel10k)는 정말 많이 사용되는 Zsh를 위한 테마입니다. 
+제가 기본적으로 참조한 글은 다음 링크에 있습니다. 
+
+출처: *[https://velog.io/@t1won/Ubuntu-powerlevel10k-%EC%84%A4%EC%B9%98](https://velog.io/@t1won/Ubuntu-powerlevel10k-%EC%84%A4%EC%B9%98)*
+
+### Zsh 설치
+
+```bash
+$ sudo apt-get update
+$ sudo apt-get install zsh
+```
+
+이후 기본 shell을 Zsh로 변경합니다. 
+
+```bash
+$ chsh -s `which zsh`
+```
+
+### oh my zsh 설치
+
+[oh my zsh](https://github.com/ohmyzsh/ohmyzsh)는 Zsh 설정을 관리하기 위한 프레임워크입니다. 
+다음과 같이 설치해 줍니다. 
+
+```bash
+$ sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+### p10k 클론 및 폰트 설치
+
+다음 코드로 p10k 저장소를 클론합니다. 
+
+```bash
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/themes/powerlevel10k
+```
+
+그 후 [링크](https://github.com/romkatv/powerlevel10k#meslo-nerd-font-patched-for-powerlevel10k)에 있는 MesloLGS NF 관련 폰트 4개를 모두 다운받고 설치합니다. 
+그리고 두 가지 설정을 해야 합니다. 
+
+처음으로 우분투 터미널의 환경설정을 해야 합니다. 
+
+> Terminal 열기 → 마우스 우클릭 → Preferences → Text → Custom font 체크 → MesloLGS NF Regular 설정
+
+다음으로 vscode 터미널의 환경설정을 해야 합니다. 
+
+> vscode 열기 → 좌하단 환경설정 → ``terminal.integrated.fontFamily`` 검색 → MesloLGS NF 입력
+
+이렇게 하면 우분투 터미널과 vscode 터미널 모두에 폰트 설정은 완료된 것입니다. 
+
+### p10k 적용
+
+```bash
+$ code ~/.zshrc
+```
+
+위 명령어로 열린 파일의 ``ZSH_THEME`` 변수를 다음과 같이 설정합니다. 
+
+```bash
+ZSH_THEME="powerlevel10k/powerlevel10k"
+```
+
+원래는 ``robbyrussell``로 되어 있었을 것입니다. 
+그리고 터미널에서 ``source ~/.zshrc``를 입력하면 테마 설정 화면이 나올 것입니다. 
+이것으로 일단 powerlevel10k 설정은 마무리가 되었습니다. 
+
+## Terminal Background Color
+
+터미널 배경 색이 조금 신경쓰입니다. 
+미묘한 보라색이 설정한 p10k와 조금 어울리지 않는 것 같습니다. 
+터미널 배경 설정은 다음과 같이 쉽게 바꿀 수 있습니다. 
+저는 기본적으로 제공되는 테마가 마음에 들어서 따로 건드리지 않았습니다. 
+
+> Terminal 열기 → 마우스 우클릭 → Preferences → Colors → Use colors from system theme 해제 → Built-in schemes에서 ``Tango dark`` 설정
+
+훨씬 차분한 색으로 바뀌어서 마음에 듭니다. 
+참고로, Use transparent background 설정을 하면 터미널의 배경을 투명하게 설정할 수 있습니다. 
+
+## p10k Color Configuration
+
+p10k의 색이 쨍한게 몇가지 있어서 색을 조정하고자 합니다. 
+
+### Success/Failyre Prompt Symbol
+
+Success/failure prompt symbol이 뭐냐면 다음 사진에 보이는 초록색 > 입니다. 
+
+![](/images/ubuntu_setup/prompt.png)
+
+앞선 명령어가 성공하면 초록색, 실패하면 빨간색이 출력됩니다. 
+
+```bash
+$ code ~/.p10k.zsh
+```
+
+위 파일을 수정하면 되는데, prompt symbol은 다음 두 줄을 변경해 주면 됩니다. 
+
+```
+# Green prompt symbol, originally 196
+typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=31
+# Red prompt symbol, originally 196
+typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=124
+```
+
+그러면 조금 덜 쨍한 색으로 변경할 수 있습니다. 
+
+### Anchor Directory Segment
+
+Anchor Directory Segment는 다음 사진에서 ``~/powerlevel10k``에 해당하는 부분입니다. 
+
+![](/images/ubuntu_setup/extravagant-style.png)
+
+저는 ``.p10k.zsh``의 다음 부분을 수정했습니다. 
+
+```
+# anchor directory segments, originally 39
+typeset -g POWERLEVEL9K_DIR_ANCHOR_FOREGROUND=66
+```
+
+## ``LS_COLOR``
+
+마지막으로 ``LS_COLOR`` 설정을 하겠습니다. 
+``LS_COLOR``는 잘못 설정하면 다음 사진과 같이 되기 때문에 매우 중요합니다. 
+
+![](/images/ubuntu_setup/lscolor.png)
+
+가시성도 떨어지고 눈도 아파집니다. 
+저는 다음 [링크](https://github.com/trapd00r/LS_COLORS)에서 제공하는 ``LS_COLORS`` 설정을 따라했습니다. 
+이 링크에 있는 ``lscolors.sh``의 내용물을 우분투의 ``~/.zshrc``의 가장 마지막에 붙여넣으면 됩니다. 
+내용이 너무 길어서 붙여넣지는 않겠습니다. 
+이 설정은 터미널을 껐다 키면 적용이 되어 있습니다. 
+
+제가 한 설정을 모두 적용하면 다음과 같이 터미널 화면이 설정됩니다. 
+저는 이런 차분한 색 설정이 좋아서 아주 마음에 듭니다. 
+
+![](/images/ubuntu_setup/Screenshot%20from%202022-08-04%2022-34-09.png)
