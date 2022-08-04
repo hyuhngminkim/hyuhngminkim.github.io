@@ -218,3 +218,23 @@ $ git-credential-manager-core configure
 이렇게 하고 나면 설정은 끝이 납니다. 
 이 뒤에 ``git push`` 등으로 사용자 인증이 필요한 작업을 하게 되면 GCM이 내부적으로 불리게 되고, GCM은 사용자 인증을 위해서 윈도우를 띄우게 됩니다. 
 사용자 인증이 완료되면 이후로는 별도의 토큰 인증이나 로그인 없이 git을 사용할 수 있게 됩니다. 
+
+### Credential stores
+
+만약 우분투에서 GCM을 사용했다면 다음과 같은 경고가 출력될 것입니다. 
+
+```bash
+fatal: No credential store has been selected. 
+```
+
+[관련 문서](https://github.com/GitCredentialManager/git-credential-manager/blob/main/docs/credstores.md)
+
+이 경고가 출력되는 이유는 각각 Windows Credential Manager와 macOS Keychain에 인증 정보가 저장되는 윈도우와 맥과 달리 리눅스는 기본 인증 정보 저장 방법이 설정되지 않았기 때문입니다. 
+따라서 위 경고문 밑에 따라 출력되는 secretservice, gpg, cache, plaintext 중에서 저장 방법을 선택해야 합니다. 
+
+저는 gpg는 너무 복잡해 보이고, cache는 시간이 지나면 만료가 되고, plaintext는 보안이 떨어지기 때문에 secretservice를 사용하기로 했습니다. 
+다음 명령어를 통해 설정을 적용합니다. 
+
+```bash
+$ git config --global cedential.credentialStore secretservice
+```
