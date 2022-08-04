@@ -216,3 +216,4 @@ $ git-credential-manager-core configure
 ```
 
 이렇게 하고 나면 설정은 끝이 납니다. 
+이 뒤에 ``git push`` 등으로 사용자 인증이 필요한 작업을 하게 되면 GCM이 내부적으로 불리게 되고, GCM은 사용자 인증을 위해서 윈도우를 띄우게 됩니다. 
