@@ -108,3 +108,5 @@ $ usermod -l <newusername> -d /home/<newusername> -m <oldusername>
 # CMD Prompt
 $ ubuntu config --default-user <newusername>
 ```
+
+이렇게 설정하면 우리가 바꾼 사용자 이름으로 로그인할 수 있게 됩니다. 
