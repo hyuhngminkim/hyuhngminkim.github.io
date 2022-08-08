@@ -181,7 +181,7 @@ $ git --version
 다음 명령어를 통해서 업그레이드 해 줍니다. 
 
 ```bash
-$ git add-apt-repository ppa:git-core/ppa -y
+$ sudo add-apt-repository ppa:git-core/ppa -y
 $ sudo apt-get update
 $ sudo apt-get install git -y
 ```
