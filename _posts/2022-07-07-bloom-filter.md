@@ -17,5 +17,11 @@ tags:
 
 출처: *Bloom, Burton H. "Space/time trade-offs in hash coding with allowable errors." Communications of the ACM 13.7 (1970): 422-426.*
 
+블룸 필터를 설명하는 논문에서 자주 나오는 표현이 있습니다. 
 
-*To be updated...*
+> A bloom filter is a space-efficient probabilistic data structure to aid in answering set membership queries. 
+>
+> 출처: *Luo, Chen, and Michael J. Carey. "LSM-based storage techniques: a survey." The VLDB Journal 29.1 (2020): 393-418.*
+
+여기서 
+
